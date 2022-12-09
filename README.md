@@ -1,7 +1,7 @@
 Shepherd
 ===
 
-![develop](https://github.com/shaurya-nwse/Shepherd/actions/workflows/build.yml/badge.svg?branch=develop)
+[![Develop](https://github.com/shaurya-nwse/Shepherd/actions/workflows/build.yml/badge.svg?branch=develop)](https://github.com/shaurya-nwse/Shepherd/actions/workflows/build.yml)
 
 Shepherd herds your Kafka messages to Kinesis.
 
