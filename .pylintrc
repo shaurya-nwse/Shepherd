@@ -1,0 +1,12 @@
+[MESSAGE CONTROL]
+disable=missing-module-docstring,
+        fixme,
+        logging-fstring-interpolation,
+        deprecated-argument,
+        too-many-arguments,
+        invalid-name,
+        line-too-long,
+        no-member
+
+[MASTER]
+ignore-paths = ^kafka_kinesis/scripts/.*$,^tests/.*$
