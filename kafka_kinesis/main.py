@@ -12,12 +12,6 @@ kinesis_client = boto3.client("kinesis")
 logger = config.logger
 
 
-async def print_to_stdout(message: bytes, tp: bytes):
-    """Print message and metadata to stdout"""
-    print(message)
-    print(tp)
-
-
 # Simple forwarder
 async def main():
     """Main"""
