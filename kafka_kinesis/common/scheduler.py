@@ -4,7 +4,7 @@ import asyncio
 import functools
 import inspect
 from datetime import datetime, timedelta
-from kafka_kinesis import config
+from kafka_kinesis.config import config
 
 logger = config.logger
 
@@ -44,9 +44,7 @@ class AIOScheduler:
         """Start the scheduler"""
         logger.info("Starting scheduler")
         self.stop()
-        self.handle = self.loop.call_soon_threadsafe(
-            self.call_next, *self.args
-        )
+        self.handle = self.loop.call_soon_threadsafe(self.call_next, *self.args)
 
     def stop(self):
         """Stop the scheduler"""
@@ -63,9 +61,7 @@ class AIOScheduler:
         """Recursively reconstruct and call the function"""
         if self.handle is not None:
             self.handle.cancel()
-        self.handle = self.loop.call_later(
-            self.get_next(), self.call_next, *self.args
-        )
+        self.handle = self.loop.call_later(self.get_next(), self.call_next, *self.args)
         logger.info(f"Calling cron func at:\n Current Time: {time.time()}")
         asyncio.gather(
             self.cron(*args, **kwargs), loop=self.loop, return_exceptions=True

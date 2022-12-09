@@ -5,7 +5,7 @@ from aiokafka import AIOKafkaConsumer
 from kafka_kinesis.common.scheduler import AIOScheduler
 from kafka_kinesis.consumer import KafkaConsumer
 from kafka_kinesis.forwarder import KinesisForwarder
-from kafka_kinesis import config
+from kafka_kinesis.config import config
 
 # boto3.setup_default_session(profile_name="saml")
 kinesis_client = boto3.client("kinesis")

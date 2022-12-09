@@ -11,7 +11,7 @@ import uuid
 import boto3
 
 from kafka_kinesis.forwarder.serializers import DataclassSerializer
-from kafka_kinesis import config
+from kafka_kinesis.config import config
 
 logging.getLogger("boto").setLevel(logging.DEBUG)
 logger = config.logger
@@ -37,9 +37,7 @@ class KinesisForwarder(Generic[T]):
         self.batch_size = batch_size
         self.batch_time = batch_time
         self.max_retries = max_retries
-        self.kinesis_client = (
-            kinesis_client if kinesis_client else boto3.client("kinesis")
-        )
+        self.kinesis_client = kinesis_client if kinesis_client else boto3.client("kinesis")
         self.flush_callback = flush_callback
         # internal attributes
         self.queue = Queue()  # thread-safe
@@ -63,9 +61,7 @@ class KinesisForwarder(Generic[T]):
                     self.flush_queue()
             time.sleep(self.batch_time)
 
-    def put_records(
-        self, records: List[T], partition_key: Optional[str] = None
-    ):
+    def put_records(self, records: List[T], partition_key: Optional[str] = None):
         """
         If we forward as bytes, random UUID would be used
         to distribute records between shards.
@@ -73,9 +69,7 @@ class KinesisForwarder(Generic[T]):
         logger.info(f"Received {len(records)} records")
         for record in records:
             (
-                self.put_record(
-                    record, partition_key=getattr(record, partition_key)
-                )
+                self.put_record(record, partition_key=getattr(record, partition_key))
                 if partition_key
                 else self.put_record(record)
             )
@@ -98,9 +92,7 @@ class KinesisForwarder(Generic[T]):
         # Check if queue has reached batch size (number of records)
         if self.queue.qsize() >= self.batch_size:
             logger.info("Flushing queue. Batch size reached.")
-            self.pool.submit(self.flush_queue).add_done_callback(
-                self.thread_callback
-            )
+            self.pool.submit(self.flush_queue).add_done_callback(self.thread_callback)
 
         # add the last record
         logger.debug(f"Putting record {record['Data']}")
@@ -148,11 +140,7 @@ class KinesisForwarder(Generic[T]):
         with self.lock:
             with open("failed_records.dlq", "ab") as f:
                 for r in records:
-                    f.write(
-                        f"{r.get('Data')},{r.get('PartitionKey')}\n".encode(
-                            "UTF-8"
-                        )
-                    )
+                    f.write(f"{r.get('Data')},{r.get('PartitionKey')}\n".encode("UTF-8"))
 
     def send_records(self, records, attempt=0):
         """Send messages to Kinesis"""
@@ -166,9 +154,7 @@ class KinesisForwarder(Generic[T]):
             time.sleep(2**attempt * 0.1)
 
         try:
-            response = self.kinesis_client.put_records(
-                StreamName=self.stream_name, Records=records
-            )
+            response = self.kinesis_client.put_records(StreamName=self.stream_name, Records=records)
             logger.info(response)
             failed_record_count = response["FailedRecordCount"]
             logger.info(f"Failed record count: {failed_record_count}")
