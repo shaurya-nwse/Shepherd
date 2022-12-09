@@ -30,9 +30,7 @@ async def main():
         max_retries=config.MAX_RETRIES,
         threads=config.NUM_THREADS,
         kinesis_client=kinesis_client,
-        flush_callback=lambda x, y: print(
-            f"Num records: {x}\nFlush time: {y}"
-        ),
+        flush_callback=lambda x, y: print(f"Num records: {x}\nFlush time: {y}"),
     )
 
     logger.info("Starting Kafka consumer")
