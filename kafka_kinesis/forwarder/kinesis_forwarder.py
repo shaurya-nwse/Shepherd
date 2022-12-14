@@ -10,7 +10,7 @@ import threading
 import uuid
 import boto3
 
-from kafka_kinesis.forwarder.serializers import DataclassSerializer
+from kafka_kinesis.serdes.serializers import DataclassSerializer
 from kafka_kinesis.config import config
 
 logging.getLogger("boto").setLevel(logging.DEBUG)
